@@ -4,8 +4,26 @@ body, html{
   width: 100vw;
   display: flex;
   justify-content: center;
-
 }
+img {
+  image-rendering: pixalated;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+#count{
+ position: absolute;
+ z-index: 3;
+ color: aliceblue;
+ right: 10px;
+ top: 10px;
+}
+/* canvas{
+  position: absolute;
+  top: 5vh;
+  height: 70vh;
+  width: 70vw;
+  overflow: hidden;
+} */
 #back_color{
   position: absolute;
   height: 100vh;
@@ -35,6 +53,8 @@ body, html{
 }
 .ground{
   bottom: 0;
+  height: 25%;
+  width: 100%;
 }
 .back_mountains{
   top: 40%;
@@ -50,40 +70,43 @@ body, html{
   left: 55%;
 }
 .many_trees{
-  top: 50%;
+  top: 52%;
   height: 25%;
 }
 .tree{
-  height: 35%;
+  height: 36%;
   top: 40%;
 }
 .tree1{
   left: 20%;
 }
 .snowman{
-  width: 10%;
-  top: 62%;
-  left: 70%;
-  animation: snowmanMove 10s infinite linear;
+  /* width: 10%; */
+  height: 10%;
+  top: 73%;
+  /* left: 70%; */
+  z-index: 3;
+  /* animation: snowmanMove 10s infinite linear; */
 }
 .fox{
   width: 15%;
   top: 70%;
+  left: 5%;
 }
-/* #game{
-  position: absolute;
-  z-index: 3;
-  width: 10vw;
-  height: 10vh;
+.jump{
+  animation: jump 2s linear;
 }
-#fox{
-  background-image: url(fox/run_1.png);
-  background-size: 10vw 10vh;
-  z-index: 3;
-  position: absolute;
-  width: 10vw;
-  height: 10vh;
-} */
+@keyframes jump {
+  0%{
+    top: 70%;
+  }
+  50%{
+    top: 60%;
+  }
+  100%{
+    top: 70%;
+  }
+}
 @keyframes snowmanMove {
   0%{
     left: 100%;
