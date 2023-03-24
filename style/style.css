@@ -1,0 +1,94 @@
+body, html{
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+
+}
+#back_color{
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  background-color: #ffffff;
+  opacity: 0.4;
+  background-image:  radial-gradient(#444cf7 1px, transparent 1px), radial-gradient(#444cf7 1px, #ffffff 1px);
+  background-size: 40px 40px;
+  background-position: 0 0,20px 20px;
+}
+#background{
+  display: flex;
+  position: absolute;
+  top: 5vh;
+  height: 70vh;
+  width: 70vw;
+  overflow: hidden;
+  object-fit: cover;
+}
+.back{
+  position: absolute;
+  width: 100%
+}
+.thing{
+  position: absolute;
+  z-index: 1;
+}
+.ground{
+  bottom: 0;
+}
+.back_mountains{
+  top: 40%;
+}
+.mountains{
+  top: 30%;
+  transform: scale(-1, 1);
+}
+.sky{
+  top: -10%;
+}
+.moon{
+  left: 55%;
+}
+.many_trees{
+  top: 50%;
+  height: 25%;
+}
+.tree{
+  height: 35%;
+  top: 40%;
+}
+.tree1{
+  left: 20%;
+}
+.snowman{
+  width: 10%;
+  top: 62%;
+  left: 70%;
+  animation: snowmanMove 10s infinite linear;
+}
+.fox{
+  width: 15%;
+  top: 70%;
+}
+/* #game{
+  position: absolute;
+  z-index: 3;
+  width: 10vw;
+  height: 10vh;
+}
+#fox{
+  background-image: url(fox/run_1.png);
+  background-size: 10vw 10vh;
+  z-index: 3;
+  position: absolute;
+  width: 10vw;
+  height: 10vh;
+} */
+@keyframes snowmanMove {
+  0%{
+    left: 100%;
+  }
+  100%{
+    left: -10%;
+  }
+}
