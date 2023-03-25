@@ -47,12 +47,12 @@ if(document.body.clientWidth < 2000 && document.body.clientWidth > 1000){
     snowman_posY        : canvas.height - 126 - 30,
   }
   speed = {
-    groundLayer   : 2,
-    treeLayer     : 1,
-    manyTreeLayer : 0.8,
-    mountLayer    : 0.5,
-    backMountLayer: 0.3,
-    snowman       : 2,
+    groundLayer   : 3,
+    treeLayer     : 2.5,
+    manyTreeLayer : 2,
+    mountLayer    : 0.8,
+    backMountLayer: 0.4,
+    snowman       : 3,
   }
 }
 
@@ -70,12 +70,12 @@ if(document.body.clientWidth < 1000){
     snowman_posY        : canvas.height - 126,
   }
   speed = {
-    groundLayer   : 1,
+    groundLayer   : 2,
     treeLayer     : 1,
     manyTreeLayer : 0.7,
     mountLayer    : 0.3,
     backMountLayer: 0.1,
-    snowman       : 1,
+    snowman       : 2,
   }
 }
 
@@ -100,27 +100,13 @@ if(document.body.clientWidth > 2000){
     snowman_posY        : groundPosY - fox.height,
   }
   speed = {
-    groundLayer   : 5,
-    treeLayer     : 1.8,
-    manyTreeLayer : 1.5,
-    mountLayer    : 0.5,
-    backMountLayer: 0.3,
-    snowman       : 5,
+    groundLayer   : 10,
+    treeLayer     : 4,
+    manyTreeLayer : 3,
+    mountLayer    : 1,
+    backMountLayer: 0.8,
+    snowman       : 10,
   }
-}
-
-// if(document.body.clientWidth > 2000){
-
-// }let speed
-
-
-speed = {
-  groundLayer   : 2,
-  treeLayer     : 1,
-  manyTreeLayer : 0.8,
-  mountLayer    : 0.5,
-  backMountLayer: 0.3,
-  snowman       : 2,
 }
 
 const death_config = {
@@ -167,10 +153,10 @@ function drawCanvas(){
     }
 
     update(){
-      if(this.x < -this.width) this.x = this.width - this.speed*2
+      if(this.x < -this.width) this.x = this.width - this.speed*2.5
       else this.x -= this.speed
 
-      if(this.x2 < - this.width) this.x2 = this.width - this.speed*2
+      if(this.x2 < - this.width) this.x2 = this.width - this.speed*2.5
       else this.x2 -= this.speed
     }
   }
@@ -274,16 +260,10 @@ function drawCanvas(){
     }
   })
 
-  let checkGameOver = document
-  checkGameOver.addEventListener('click', (event) => {
-    const e = event.target
-    console.log(e);
+  // let checkGameOver = document
+  document.addEventListener('click', () => {
+
     if(!gameMove && document.querySelector('.game_over')){
-      // console.log('евент работает');
-      // gameMove = true
-      // checkGameOver = document
-      // const game_over = $('.game_over')
-      // document.body.removeChild(game_over)
         location.reload();
     }
   })
@@ -315,7 +295,7 @@ function drawCanvas(){
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
-      ctx.drawImage(moon, width_config.moonPosX, 0)
+      ctx.drawImage(moon, width_config.moonPosX, 0, moon.width*wh*0.8, moon.height*wh *0.8)
 
       moveObj.forEach(item => {
         item.update()
@@ -330,11 +310,7 @@ function drawCanvas(){
     collision()
     requestAnimationFrame(animate)
   }
-  function gameStop(){
-    if (gameMove === false) {
-      return drawCanvas()
-    }
-  }
+
 
   animate()
 }
