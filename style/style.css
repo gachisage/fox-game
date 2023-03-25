@@ -4,11 +4,44 @@ body, html{
   width: 100vw;
   display: flex;
   justify-content: center;
+  font-family: 'Press Start 2P', cursive;
 }
 img {
   image-rendering: pixalated;
   user-select: none;
   -webkit-user-drag: none;
+}
+.game_over{
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f3f1dec7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center
+  z-index: 10;
+  color: #033082;
+  width: 70%;
+  height: 20%;
+  line-height: 1.5;
+}
+.promo{
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  top: 20%;
+
+  background-color: #f3f1dec7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1.5;
+  color: #033082;
+  z-index: 10;
+  width: 70%;
+  height: 20%;
 }
 #count{
  position: absolute;
@@ -17,18 +50,15 @@ img {
  right: 10px;
  top: 10px;
 }
-/* canvas{
+canvas{
   position: absolute;
-  top: 5vh;
-  height: 70vh;
-  width: 70vw;
   overflow: hidden;
-} */
+}
 #back_color{
   position: absolute;
   height: 100vh;
   width: 100vw;
-  background-color: #ffffff;
+  background-color: #f8ebeb;
   opacity: 0.4;
   background-image:  radial-gradient(#444cf7 1px, transparent 1px), radial-gradient(#444cf7 1px, #ffffff 1px);
   background-size: 40px 40px;

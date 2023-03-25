@@ -37,11 +37,11 @@
   }
 
 
-  animateMount()
-  animateGround()
-  animateMountBack()
-  jumpFox()
-  sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
+  // animateMount()
+  // animateGround()
+  // animateMountBack()
+  // jumpFox()
+  // sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
 
 
 
