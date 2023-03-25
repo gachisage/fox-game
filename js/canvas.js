@@ -279,11 +279,12 @@ function drawCanvas(){
     const e = event.target
     console.log(e);
     if(!gameMove && document.querySelector('.game_over')){
-      console.log('евент работает');
-      gameMove = true
-      checkGameOver = document
-      const game_over = $('.game_over')
-      document.body.removeChild(game_over)
+      // console.log('евент работает');
+      // gameMove = true
+      // checkGameOver = document
+      // const game_over = $('.game_over')
+      // document.body.removeChild(game_over)
+        location.reload();
     }
   })
 
