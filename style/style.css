@@ -8,7 +8,7 @@ body, html{
   overflow: hidden;
 }
 img {
-  image-rendering: pixalated;
+  image-rendering: pixelated;
   user-select: none;
   -webkit-user-drag: none;
 }

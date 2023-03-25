@@ -2,11 +2,12 @@ const $ = (selector) => document.querySelector(selector)
 
 const canvas = $('#canvas')
 const ctx = canvas.getContext('2d')
+ctx.imageSmoothingEnabled = false
 
 canvas.width = document.body.clientWidth
 canvas.height = document.body.clientHeight
 
-const promo_code = "You have reached the KEY: FG12x403df"
+const promo_code = 'You have reached the KEY: FG12x403df'
 const count_for_win = 560
 
 const ground = $('.ground')
@@ -29,11 +30,11 @@ let countValue = 0
 count.innerHTML = '0'
 
 
-//adpt
+// Adptive
 let width_config
 let speed
 
-if(document.body.clientWidth < 2000 && document.body.clientWidth > 1000){
+if (document.body.clientWidth < 2000 && document.body.clientWidth > 1000) {
   width_config = {
     widthImages         : canvas.width,
     groundPosY          : canvas.height - 126,
@@ -56,7 +57,7 @@ if(document.body.clientWidth < 2000 && document.body.clientWidth > 1000){
   }
 }
 
-if(document.body.clientWidth < 1000){
+if (document.body.clientWidth < 1000) {
   width_config = {
     widthImages         : 1000,
     groundPosY          : canvas.height - 126,
@@ -79,14 +80,14 @@ if(document.body.clientWidth < 1000){
   }
 }
 
-const wh = canvas.width/canvas.height * 1.5
+const wh = canvas.width / canvas.height * 1.5
 const groundPosY = canvas.height - ground.height * wh
 const many_treesPosY = groundPosY - many_trees.height * wh
 const treePosY = groundPosY - tree.height * wh
 const mountainsPosY = many_treesPosY - mountains.height * wh * 0.8
 const back_mountainsPosY = many_treesPosY - mountains.height * wh * 0.8
 
-if(document.body.clientWidth > 2000){
+if (document.body.clientWidth > 2000) {
   width_config = {
     widthImages         : canvas.width,
     groundPosY          : groundPosY,
@@ -118,15 +119,15 @@ drawCanvas()
 jumpFox()
 
 
-function updateSizeDoc(){
+function updateSizeDoc() {
   canvas.width = document.body.clientWidth
   canvas.height = document.body.clientHeight
 }
 
-function drawCanvas(){
+function drawCanvas() {
 
   class Layer{
-    constructor (image, movSpeed, posY, img_width, height){
+    constructor (image, movSpeed, posY, img_width, height) {
       this.x = 0
       this.y = posY || 0
       this.width = width_config.widthImages
@@ -137,58 +138,58 @@ function drawCanvas(){
       this.height = height
     }
 
-    draw(){
-      if(document.body.clientWidth > 1000 && document.body.clientWidth < 2001){
+    draw() {
+      if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
         ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height),
         ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height)
       }
-      if(document.body.clientWidth > 2000){
-        ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height* canvas.width/canvas.height*1.5),
-        ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height* canvas.width/canvas.height*1.5)
+      if (document.body.clientWidth > 2000) {
+        ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height * canvas.width / canvas.height * 1.5),
+        ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height * canvas.width / canvas.height * 1.5)
       }
-      if(document.body.clientWidth < 1000) {
+      if (document.body.clientWidth < 1000) {
         ctx.drawImage(this.image, this.x, this.y)
         ctx.drawImage(this.image, this.x2, this.y)
       }
     }
 
-    update(){
-      if(this.x < -this.width) this.x = this.width - this.speed*2.5
+    update() {
+      if (this.x < -this.width) this.x = this.width - this.speed * 2.5
       else this.x -= this.speed
 
-      if(this.x2 < - this.width) this.x2 = this.width - this.speed*2.5
+      if (this.x2 < -this.width) this.x2 = this.width - this.speed * 2.5
       else this.x2 -= this.speed
     }
   }
 
   class Snowman{
-    constructor (){
+    constructor () {
       this.x = canvas.width
       this.y = width_config.snowman_posY
       this.image = snowman
       this.speed = speed.snowman
     }
 
-    draw(){
-      if(document.body.clientWidth > 2000){
+    draw() {
+      if (document.body.clientWidth > 2000) {
         ctx.drawImage(this.image, this.x, this.y, this.image.width *1.8, this.image.height*1.8)
       }
-      if(document.body.clientWidth > 1000 && document.body.clientWidth < 2001){
+      if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
         ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
       }
-      if(document.body.clientWidth < 1000){
+      if (document.body.clientWidth < 1000) {
         ctx.drawImage(this.image, this.x, this.y, this.image.width * 0.5, this.image.height * 0.5)
       }
     }
 
-    update(){
+    update() {
       this.x -= this.speed
-      if(this.x < 0 - 20) this.x = canvas.width
+      if (this.x < 0 - 20) this.x = canvas.width
     }
   }
 
   class Fox{
-    constructor (){
+    constructor () {
       this.x = width_config.fox_posX
       this.y = width_config.fox_posY
       this.image = fox
@@ -197,42 +198,40 @@ function drawCanvas(){
       this.heghestJump = false
     }
 
-    draw(){
-
-      if(document.body.clientWidth > 2000){
-        ctx.drawImage(this.image, this.x, this.y, this.image.width*1.8, this.image.height*1.8)
+    draw() {
+      if (document.body.clientWidth > 2000) {
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * 1.8, this.image.height * 1.8)
       }
-      if(document.body.clientWidth > 1000 && document.body.clientWidth < 2001){
+      if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
         ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
       }
-      if(document.body.clientWidth < 1000){
+      if (document.body.clientWidth < 1000) {
         ctx.drawImage(this.image, this.x, this.y, this.image.width * 0.5, this.image.height * 0.5)
       }
     }
 
-    jump(){
-      if(this.jumping && !this.heghestJump && this.y > width_config.fox_posY - 130){
+    jump() {
+      if (this.jumping && !this.heghestJump && this.y > width_config.fox_posY - 130) {
         this.y -= this.jumpSpeed
-        console.log('up');
+        console.log('up')
       }
-      else if(this.y < width_config.fox_posY){
+      else if (this.y < width_config.fox_posY) {
         this.heghestJump = true
         this.y += this.jumpSpeed
-        console.log('dovn');
+        console.log('dovn')
       }
       else {
         this.heghestJump = false
         this.jumping = false
-        console.log('end');
+        console.log('end')
       }
     }
 
-    update(){
+    update() {
       this.draw()
       this.jump()
     }
   }
-
 
   const groundLayer = new Layer(ground, speed.groundLayer, width_config.groundPosY)
   const treeLayer = new Layer(tree, speed.treeLayer, width_config.treePosY)
@@ -245,16 +244,15 @@ function drawCanvas(){
   const foxLayer = new Fox()
   const snower = new Snowman(2, 300)
 
-
   document.addEventListener('click', () => {
-      if(!foxLayer.jumping && gameMove){
-        foxLayer.jumping = true
-      }
+    if (!foxLayer.jumping && gameMove) {
+      foxLayer.jumping = true
+    }
   })
 
   document.addEventListener('keydown', (event) => {
-    if(event.keyCode == 32 || event.keyCode == 38) {
-      if(!foxLayer.jumping){
+    if (event.keyCode == 32 || event.keyCode == 38) {
+      if (!foxLayer.jumping) {
         foxLayer.jumping = true
       }
     }
@@ -262,17 +260,16 @@ function drawCanvas(){
 
   // let checkGameOver = document
   document.addEventListener('click', () => {
-
-    if(!gameMove && document.querySelector('.game_over')){
-        location.reload();
+    if (!gameMove && document.querySelector('.game_over')) {
+      location.reload()
     }
   })
 
-  function collision(){
-    if(foxLayer.x < snower.x &&
+  function collision() {
+    if (foxLayer.x < snower.x &&
        foxLayer.x + 40 > snower.x &&
        foxLayer.y + 70 > snower.y && gameMove
-      ){
+      ) {
       const promoCode = document.createElement('H2')
       document.body.append(promoCode)
       promoCode.classList.add('game_over')
@@ -284,14 +281,14 @@ function drawCanvas(){
       snower.x = canvas.width
       checkGameOver = $('.game_over')
       cancelAnimationFrame(animate)
-      addEventListener('click', drawCanvas, {once: true} )
+      addEventListener('click', drawCanvas, { once: true } )
 
       return gameMove = false
     }
   }
 
-  function animate(){
-    if(gameMove){
+  function animate() {
+    if (gameMove) {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
@@ -316,108 +313,108 @@ function drawCanvas(){
 }
 
 function rand(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-//promo_code
+// Promo code
 const countInt = setInterval(() => {
-  if(gameMove){
-  countValue++
-  count.innerHTML = countValue
-  promoСode()
+  if (gameMove) {
+    countValue++
+    count.innerHTML = countValue
+    promoСode()
   }
   else countValue = 0
-}, 100);
+}, 100)
 
 let checkPromo = false
 
 function promoСode() {
-  if(countValue > count_for_win && countValue < count_for_win + 2) {
+  if (countValue > count_for_win && countValue < count_for_win + 2) {
     createPromoCode()
-    console.log('ehf');
+    console.log('ehf')
     checkPromo = true
     setTimeout(() => {
-      if(checkPromo == true){
+      if (checkPromo == true) {
         checkVariablePromo()
       }
     }, 4000)
   }
 }
 
-function checkVariablePromo(){
+function checkVariablePromo() {
   const promoCode = $('.promo')
   document.body.removeChild(promoCode)
 }
 
-function createPromoCode(){
-  const promoCode = document.createElement('H2')
+function createPromoCode() {
+  const promoCode = document.createElement('h2')
   document.body.append(promoCode)
   promoCode.classList.add('promo')
   promoCode.classList.add('modal')
   promoCode.innerHTML = promo_code
 }
 
-window.addEventListener('resize',() => {
+window.addEventListener('resize', () => {
   updateSizeDoc()
   drawCanvas()
 })
 
-//fnimation fox
-let currentAnimation = null;
+// Animation fox
+let currentAnimation = null
 let fox_config = {
   jump: false,
   timeJump: 2000,
-};
+}
 
-if(gameMove) sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
-if(!gameMove) sprintsForMove(6, 100, '.fox', 'fox/death_', '.png')
+if (gameMove) sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
+if (!gameMove) sprintsForMove(6, 100, '.fox', 'fox/death_', '.png')
 
-function jumpFox(){
+function jumpFox() {
   window.addEventListener('keydown', (event) => {
-    if(event.keyCode == 32 || event.keyCode == 38) {
-      fox_config.jump = true;
-      switchAnimation();
+    if (event.keyCode == 32 || event.keyCode == 38) {
+      fox_config.jump = true
+      switchAnimation()
     }
   })
 
   window.addEventListener('click', () => {
-      fox_config.jump = true;
-      switchAnimation();
+      fox_config.jump = true
+      switchAnimation()
   })
 }
 
 function switchAnimation() {
   if (currentAnimation && gameMove) {
-    cancelAnimationFrame(currentAnimation);
-    currentAnimation = null;
+    cancelAnimationFrame(currentAnimation)
+    currentAnimation = null
   }
 
   if (fox_config.jump && gameMove) {
-    sprintsForMove(6, 350, '.fox', 'fox/jump_', '.png');
+    sprintsForMove(6, 350, '.fox', 'fox/jump_', '.png')
     setTimeout(() => {
-      fox_config.jump = false;
+      fox_config.jump = false
       switchAnimation()
-    }, fox_config.timeJump);
+    }, fox_config.timeJump)
   } else {
-    sprintsForMove(5, 100, '.fox', 'fox/run_', '.png');
+    sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
   }
 }
 
 function sprintsForMove(count, int, selector, path1, path2) {
-  let currentImage = 1;
-  const imageCount = count;
-  const intervalTime = int;
-  const loaderImage = $(selector);
-  let lastTime = 0;
+  let currentImage = 1
+  const imageCount = count
+  const intervalTime = int
+  const loaderImage = $(selector)
+  let lastTime = 0
 
   function switchImage(timestamp) {
-    const deltaTime = timestamp - lastTime;
+    const deltaTime = timestamp - lastTime
     if (deltaTime >= intervalTime) {
-      currentImage = currentImage === imageCount ? 1 : currentImage + 1;
-      loaderImage.src = `${path1}${currentImage}${path2}`;
-      lastTime = timestamp;
+      currentImage = currentImage === imageCount ? 1 : currentImage + 1
+      loaderImage.src = `${path1}${currentImage}${path2}`
+      lastTime = timestamp
     }
-    currentAnimation = requestAnimationFrame(switchImage);
+    currentAnimation = requestAnimationFrame(switchImage)
   }
-  currentAnimation = requestAnimationFrame(switchImage);
+  currentAnimation = requestAnimationFrame(switchImage)
 }
