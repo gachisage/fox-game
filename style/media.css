@@ -1,3 +1,13 @@
+@media (max-width: 4000px){
+  .modal, body{
+    font-size: 28px;
+  }
+}
+@media (max-width: 2000px){
+  .modal{
+    font-size: 20px;
+  }
+}
 @media (max-width: 1000px){
   #background{
     display: flex;
@@ -8,59 +18,8 @@
     overflow: hidden;
     object-fit: cover;
   }
-  .promo{
-    height: 15%;
-    font-size: 14px;
-    padding: 10%;
-  }
-  .game_over{
+  .modal{
     font-size: 14px;
     height: 15%;
-    padding: 10%;
-  }
-  .ground{
-    bottom: 0;
-    height: 20%;
-  }
-  .mountains{
-    top: 40%;
-    transform: scale(-1, 1);
-    object-fit: cover;
-    height: 30%;
-  }
-  .ground{
-    object-fit: cover;
-  }
-  .back_mountains{
-    top: 35%;
-    object-fit: cover;
-    height: 30%;
-  }
-  .many_trees{
-    top: 60%;
-    height: 20%;
-    object-fit: cover;
-  }
-  .tree{
-    height: 25%;
-    top: 56%;
-  }
-  .tree1{
-    left: 20%;
-  }
-  .tree3{
-    left: 70%;
-  }
-  .sky{
-    top: 0;
-  }
-  .fox{
-    top: 80%;
-    width: 25vw;
-  }
-  .snowman{
-    height: 5%;
-    top: 82%;
-    left: 70%;
   }
 }

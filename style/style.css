@@ -5,43 +5,28 @@ body, html{
   display: flex;
   justify-content: center;
   font-family: 'Press Start 2P', cursive;
+  overflow: hidden;
 }
 img {
   image-rendering: pixalated;
   user-select: none;
   -webkit-user-drag: none;
 }
-.game_over{
+.modal{
   position: absolute;
   margin-left: auto;
   margin-right: auto;
-  background-color: #f3f1dec7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center
-  z-index: 10;
-  color: #033082;
-  width: 70%;
-  height: 20%;
-  line-height: 1.5;
-}
-.promo{
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  top: 20%;
-
   background-color: #f3f1dec7;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  line-height: 1.5;
-  color: #033082;
   z-index: 10;
+  color: #033082;
   width: 70%;
   height: 20%;
+  top: 40%;
+  line-height: 1.5;
 }
 #count{
  position: absolute;
@@ -53,95 +38,4 @@ img {
 canvas{
   position: absolute;
   overflow: hidden;
-}
-#back_color{
-  position: absolute;
-  height: 100vh;
-  width: 100vw;
-  background-color: #f8ebeb;
-  opacity: 0.4;
-  background-image:  radial-gradient(#444cf7 1px, transparent 1px), radial-gradient(#444cf7 1px, #ffffff 1px);
-  background-size: 40px 40px;
-  background-position: 0 0,20px 20px;
-}
-#background{
-  display: flex;
-  position: absolute;
-  top: 5vh;
-  height: 70vh;
-  width: 70vw;
-  overflow: hidden;
-  object-fit: cover;
-}
-.back{
-  position: absolute;
-  width: 100%
-}
-.thing{
-  position: absolute;
-  z-index: 1;
-}
-.ground{
-  bottom: 0;
-  height: 25%;
-  width: 100%;
-}
-.back_mountains{
-  top: 40%;
-}
-.mountains{
-  top: 30%;
-  transform: scale(-1, 1);
-}
-.sky{
-  top: -10%;
-}
-.moon{
-  left: 55%;
-}
-.many_trees{
-  top: 52%;
-  height: 25%;
-}
-.tree{
-  height: 36%;
-  top: 40%;
-}
-.tree1{
-  left: 20%;
-}
-.snowman{
-  /* width: 10%; */
-  height: 10%;
-  top: 73%;
-  /* left: 70%; */
-  z-index: 3;
-  /* animation: snowmanMove 10s infinite linear; */
-}
-.fox{
-  width: 15%;
-  top: 70%;
-  left: 5%;
-}
-.jump{
-  animation: jump 2s linear;
-}
-@keyframes jump {
-  0%{
-    top: 70%;
-  }
-  50%{
-    top: 60%;
-  }
-  100%{
-    top: 70%;
-  }
-}
-@keyframes snowmanMove {
-  0%{
-    left: 100%;
-  }
-  100%{
-    left: -10%;
-  }
 }

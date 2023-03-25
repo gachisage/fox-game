@@ -7,7 +7,7 @@ canvas.width = document.body.clientWidth
 canvas.height = document.body.clientHeight
 
 const promo_code = "You have reached the KEY: FG12x403df"
-const count_for_win = 100
+const count_for_win = 560
 
 const ground = $('.ground')
 const tree = $('.tree')
@@ -16,15 +16,6 @@ const back_mountains = $('.back_mountains')
 const many_trees = $('.many_trees')
 const sky = $('.sky')
 const moon = $('.moon')
-
-const ground_big = $('.ground_big')
-const tree_big = $('.tree_big')
-const mountains_big = $('.mountains_big')
-const back_mountains_big = $('.back_mountains_big')
-const many_trees_big = $('.many_trees_big')
-
-const sizeWindowPC = document.documentElement.clientWidth > 1000
-const sizeWindowTf = document.documentElement.clientWidth <= 1000
 
 const snowman = $('.snowman')
 const snowmans = []
@@ -37,24 +28,93 @@ const count = $('#count')
 let countValue = 0
 count.innerHTML = '0'
 
-let width_config
 
-width_config = {
-  widthImages         : canvas.width,
-  groundPosY          : canvas.height - 126,
-  many_treesPosY      : canvas.height - 126 - 130,
-  treePosY            : canvas.height - 126 - 120,
-  mountainsPosY       : canvas.height - 126 - 120 - 160,
-  back_mountainsPosY  : canvas.height - 126 - 120 - 100,
-  moonPosX            : canvas.width / 2,
-  fox_posY            : canvas.height - 126 - 30,
-  fox_posX            : canvas.width / 14,
-  snowman_posY        : canvas.height - 126 - 30,
+//adpt
+let width_config
+let speed
+
+if(document.body.clientWidth < 2000 && document.body.clientWidth > 1000){
+  width_config = {
+    widthImages         : canvas.width,
+    groundPosY          : canvas.height - 126,
+    many_treesPosY      : canvas.height - 126 - 130,
+    treePosY            : canvas.height - 126 - 120,
+    mountainsPosY       : canvas.height - 126 - 120 - 160,
+    back_mountainsPosY  : canvas.height - 126 - 120 - 100,
+    moonPosX            : canvas.width / 2,
+    fox_posY            : canvas.height - 126 - 30,
+    fox_posX            : canvas.width / 14,
+    snowman_posY        : canvas.height - 126 - 30,
+  }
+  speed = {
+    groundLayer   : 2,
+    treeLayer     : 1,
+    manyTreeLayer : 0.8,
+    mountLayer    : 0.5,
+    backMountLayer: 0.3,
+    snowman       : 2,
+  }
 }
 
+if(document.body.clientWidth < 1000){
+  width_config = {
+    widthImages         : 1000,
+    groundPosY          : canvas.height - 126,
+    many_treesPosY      : canvas.height - 126 - 130,
+    treePosY            : canvas.height - 126 - 120,
+    mountainsPosY       : canvas.height - 126 - 120 - 160,
+    back_mountainsPosY  : canvas.height - 126 - 120 - 100,
+    moonPosX            : canvas.width / 2,
+    fox_posY            : canvas.height - 126,
+    fox_posX            : canvas.width / 14,
+    snowman_posY        : canvas.height - 126,
+  }
+  speed = {
+    groundLayer   : 1,
+    treeLayer     : 1,
+    manyTreeLayer : 0.7,
+    mountLayer    : 0.3,
+    backMountLayer: 0.1,
+    snowman       : 1,
+  }
+}
+
+const wh = canvas.width/canvas.height * 1.5
+const groundPosY = canvas.height - ground.height * wh
+const many_treesPosY = groundPosY - many_trees.height * wh
+const treePosY = groundPosY - tree.height * wh
+const mountainsPosY = many_treesPosY - mountains.height * wh * 0.8
+const back_mountainsPosY = many_treesPosY - mountains.height * wh * 0.8
+
+if(document.body.clientWidth > 2000){
+  width_config = {
+    widthImages         : canvas.width,
+    groundPosY          : groundPosY,
+    many_treesPosY      : many_treesPosY,
+    treePosY            : treePosY,
+    mountainsPosY       : mountainsPosY,
+    back_mountainsPosY  : back_mountainsPosY,
+    moonPosX            : canvas.width / 2,
+    fox_posY            : groundPosY - fox.height,
+    fox_posX            : canvas.width / 14,
+    snowman_posY        : groundPosY - fox.height,
+  }
+  speed = {
+    groundLayer   : 5,
+    treeLayer     : 1.8,
+    manyTreeLayer : 1.5,
+    mountLayer    : 0.5,
+    backMountLayer: 0.3,
+    snowman       : 5,
+  }
+}
+
+// if(document.body.clientWidth > 2000){
+
+// }let speed
 
 
-const speed = {
+speed = {
   groundLayer   : 2,
   treeLayer     : 1,
   manyTreeLayer : 0.8,
@@ -69,7 +129,7 @@ const death_config = {
 
 updateSizeDoc()
 drawCanvas()
-
+jumpFox()
 
 
 function updateSizeDoc(){
@@ -92,9 +152,18 @@ function drawCanvas(){
     }
 
     draw(){
-      ctx.drawImage(this.image, this.x, this.y)
-      ctx.drawImage(this.image, this.x2, this.y)
-
+      if(document.body.clientWidth > 1000 && document.body.clientWidth < 2001){
+        ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height),
+        ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height)
+      }
+      if(document.body.clientWidth > 2000){
+        ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height* canvas.width/canvas.height*1.5),
+        ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height* canvas.width/canvas.height*1.5)
+      }
+      if(document.body.clientWidth < 1000) {
+        ctx.drawImage(this.image, this.x, this.y)
+        ctx.drawImage(this.image, this.x2, this.y)
+      }
     }
 
     update(){
@@ -106,7 +175,6 @@ function drawCanvas(){
     }
   }
 
-
   class Snowman{
     constructor (){
       this.x = canvas.width
@@ -116,7 +184,15 @@ function drawCanvas(){
     }
 
     draw(){
-      ctx.drawImage(this.image, this.x, this.y)
+      if(document.body.clientWidth > 2000){
+        ctx.drawImage(this.image, this.x, this.y, this.image.width *1.8, this.image.height*1.8)
+      }
+      if(document.body.clientWidth > 1000 && document.body.clientWidth < 2001){
+        ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
+      }
+      if(document.body.clientWidth < 1000){
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * 0.5, this.image.height * 0.5)
+      }
     }
 
     update(){
@@ -136,7 +212,16 @@ function drawCanvas(){
     }
 
     draw(){
-      ctx.drawImage(this.image, this.x, this.y, 120, 60)
+
+      if(document.body.clientWidth > 2000){
+        ctx.drawImage(this.image, this.x, this.y, this.image.width*1.8, this.image.height*1.8)
+      }
+      if(document.body.clientWidth > 1000 && document.body.clientWidth < 2001){
+        ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
+      }
+      if(document.body.clientWidth < 1000){
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * 0.5, this.image.height * 0.5)
+      }
     }
 
     jump(){
@@ -148,7 +233,6 @@ function drawCanvas(){
         this.heghestJump = true
         this.y += this.jumpSpeed
         console.log('dovn');
-
       }
       else {
         this.heghestJump = false
@@ -176,24 +260,13 @@ function drawCanvas(){
   const snower = new Snowman(2, 300)
 
 
-
-
   document.addEventListener('click', () => {
-    console.log('евент работает');
-    console.log(foxLayer.jumping);
       if(!foxLayer.jumping && gameMove){
         foxLayer.jumping = true
       }
-      if(!gameMove) {
-        gameMove = true
-      }
-      if (gameMove && document.body.querySelector('.game_over')) {
-        const game_over = $('.game_over')
-        document.body.removeChild(game_over)
-      }
   })
-  document.addEventListener('keydown', (event) => {
 
+  document.addEventListener('keydown', (event) => {
     if(event.keyCode == 32 || event.keyCode == 38) {
       if(!foxLayer.jumping){
         foxLayer.jumping = true
@@ -201,57 +274,75 @@ function drawCanvas(){
     }
   })
 
+  let checkGameOver = document
+  checkGameOver.addEventListener('click', (event) => {
+    const e = event.target
+    console.log(e);
+    if(!gameMove && document.querySelector('.game_over')){
+      console.log('евент работает');
+      gameMove = true
+      checkGameOver = document
+      const game_over = $('.game_over')
+      document.body.removeChild(game_over)
+    }
+  })
 
   function collision(){
     if(foxLayer.x < snower.x &&
-      foxLayer.x + 40 > snower.x &&
-      foxLayer.y + 70 > snower.y && gameMove)
-    {
-        const promoCode = document.createElement('H2')
-        document.body.append(promoCode)
-        promoCode.classList.add('game_over')
-        promoCode.innerHTML = `GAME OVER <br> click for a new game`
-        countValue = 0
-        fox.src = `fox/death_5.png`
-        snower.x = canvas.width
+       foxLayer.x + 40 > snower.x &&
+       foxLayer.y + 70 > snower.y && gameMove
+      ){
+      const promoCode = document.createElement('H2')
+      document.body.append(promoCode)
+      promoCode.classList.add('game_over')
+      promoCode.classList.add('modal')
+      promoCode.innerHTML = `GAME OVER <br> click for a new game`
 
-        return gameMove = false
+      countValue = 0
+      fox.src = `fox/death_5.png`
+      snower.x = canvas.width
+      checkGameOver = $('.game_over')
+      cancelAnimationFrame(animate)
+      addEventListener('click', drawCanvas, {once: true} )
+
+      return gameMove = false
     }
   }
-
 
   function animate(){
     if(gameMove){
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
-    ctx.drawImage(moon, width_config.moonPosX, 0)
+      ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
+      ctx.drawImage(moon, width_config.moonPosX, 0)
 
-    moveObj.forEach(item => {
-      item.update()
-      item.draw()
-    })
+      moveObj.forEach(item => {
+        item.update()
+        item.draw()
+      })
 
-    snower.draw()
-    snower.update()
-    foxLayer.update()
-
-
-    // ctx.drawImage(fox, width_config.fox_posX, width_config.fox_posY, 120, 60)
-
+      snower.draw()
+      snower.update()
+      foxLayer.update()
     }
-  collision()
-  requestAnimationFrame(animate)
+
+    collision()
+    requestAnimationFrame(animate)
+  }
+  function gameStop(){
+    if (gameMove === false) {
+      return drawCanvas()
+    }
   }
 
   animate()
 }
 
-
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+//promo_code
 const countInt = setInterval(() => {
   if(gameMove){
   countValue++
@@ -262,6 +353,7 @@ const countInt = setInterval(() => {
 }, 100);
 
 let checkPromo = false
+
 function promoСode() {
   if(countValue > count_for_win && countValue < count_for_win + 2) {
     createPromoCode()
@@ -284,36 +376,34 @@ function createPromoCode(){
   const promoCode = document.createElement('H2')
   document.body.append(promoCode)
   promoCode.classList.add('promo')
+  promoCode.classList.add('modal')
   promoCode.innerHTML = promo_code
 }
-
 
 window.addEventListener('resize',() => {
   updateSizeDoc()
   drawCanvas()
 })
 
-
-jumpFox()
+//fnimation fox
 let currentAnimation = null;
 let fox_config = {
   jump: false,
   timeJump: 2000,
 };
 
-if(gameMove) sprintsForMove(5, 100, '.fox', 'fox/run_', '.png');
+if(gameMove) sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
 if(!gameMove) sprintsForMove(6, 100, '.fox', 'fox/death_', '.png')
 
 function jumpFox(){
   window.addEventListener('keydown', (event) => {
-
     if(event.keyCode == 32 || event.keyCode == 38) {
       fox_config.jump = true;
       switchAnimation();
     }
   })
-  window.addEventListener('click', () => {
 
+  window.addEventListener('click', () => {
       fox_config.jump = true;
       switchAnimation();
   })
@@ -335,6 +425,7 @@ function switchAnimation() {
     sprintsForMove(5, 100, '.fox', 'fox/run_', '.png');
   }
 }
+
 function sprintsForMove(count, int, selector, path1, path2) {
   let currentImage = 1;
   const imageCount = count;
