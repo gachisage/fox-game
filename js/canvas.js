@@ -311,25 +311,6 @@ function drawCanvas() {
     }
   }
 
-  // document.addEventListener('click', () => {
-  //   if (!startMoveBack) {
-  //     startMoveBack = true;
-  //   }
-  // })
-
-  // staticBack()
-
-  // function staticBack() {
-  //   ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
-  //   ctx.drawImage(moon, width_config.moonPosX, 0, moon.width * wh * 0.8, moon.height * wh * 0.8)
-
-  //   moveObj.forEach(item => {
-  //     item.draw()
-  //     item.update()
-  //   })
-  //   foxLayer.draw()
-  // }
-
   function animate() {
     if (gameMove) {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -417,7 +398,7 @@ window.addEventListener('resize', () => {
 let currentAnimation = null
 let fox_config = {
   jump: false,
-  timeJump: 1500,
+  timeJump: 2000,
 }
 
 if (gameMove) sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
