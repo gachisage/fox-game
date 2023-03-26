@@ -48,7 +48,7 @@ const foxConfig = {
 }
 
 const width_config = {
-  widthImages         : canvas.width,
+  widthImages         : 1000,
   groundPosY          : canvas.height - 110,
   many_treesPosY      : canvas.height - 126 - 130,
   treePosY            : canvas.height - 126 - 120,
