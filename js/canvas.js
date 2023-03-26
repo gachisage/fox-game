@@ -207,6 +207,7 @@ function collision() {
       foxLayer.x + foxLayer.width * width_config.adaptHeightSnowman / 1.3 > snower.x &&
       foxLayer.y + width_config.collisionHeight > snower.y && gameMove) {
 
+      playSound('loose')
       $('.modal.game_over').style.display = 'block'
       countValue = 0
       fox.src = `fox/death_5.png`
@@ -283,7 +284,9 @@ function countInt() {
 
 function promoСode() {
   if (countValue > count_for_win && countValue < count_for_win + 2) {
+    playSound('win')
     $('.modal.promocode').style.display = 'block'
+    $('#promocode').textContent = promo_code
     checkPromo = true
   }
 }
@@ -399,9 +402,15 @@ function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+function playSound(sound) {
+  const audio = new Audio(`./sounds/${sound}.wav`)
+  audio.play()
+}
+
 // Buttons copy and new Game
 const copyContent = async () => {
   try {
+    if (countValue < count_for_win) return
     await navigator.clipboard.writeText(key)
     console.log('Content copied to clipboard')
   } catch (err) {
