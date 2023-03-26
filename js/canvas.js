@@ -22,6 +22,8 @@ const snowman = $('.snowman')
 const snowmans = []
 
 let gameMove = true
+let startGame = false
+let startMoveBack = false
 
 const fox = $('.fox')
 
@@ -46,6 +48,10 @@ if (document.body.clientWidth < 2000 && document.body.clientWidth > 1000) {
     fox_posY            : canvas.height - 126 - 30,
     fox_posX            : canvas.width / 14,
     snowman_posY        : canvas.height - 126 - 30,
+    jumpHeight          : 130,
+    adaptHeightSnowman  : 1,
+    collisionHeight     : 50,
+
   }
   speed = {
     groundLayer   : 3,
@@ -69,6 +75,10 @@ if (document.body.clientWidth < 1000) {
     fox_posY            : canvas.height - 126,
     fox_posX            : canvas.width / 14,
     snowman_posY        : canvas.height - 126,
+    jumpHeight          : 80,
+    adaptHeightSnowman  : 0.5,
+    collisionHeight     : 30,
+
   }
   speed = {
     groundLayer   : 2,
@@ -99,6 +109,9 @@ if (document.body.clientWidth > 2000) {
     fox_posY            : groundPosY - fox.height,
     fox_posX            : canvas.width / 14,
     snowman_posY        : groundPosY - fox.height,
+    jumpHeight          : 160,
+    adaptHeightSnowman  : 1.8,
+    collisionHeight     : 80,
   }
   speed = {
     groundLayer   : 10,
@@ -114,11 +127,21 @@ const death_config = {
  smowPosX: []
 }
 
+function start_Game() {
+  if (!startGame) {
+    jumpFox()
+    countInt()
+    startGame = true;
+  }
+}
+
+document.addEventListener('click', start_Game)
+
 updateSizeDoc()
 drawCanvas()
-jumpFox()
 
 
+console.log(startGame);
 function updateSizeDoc() {
   canvas.width = document.body.clientWidth
   canvas.height = document.body.clientHeight
@@ -168,17 +191,19 @@ function drawCanvas() {
       this.y = width_config.snowman_posY
       this.image = snowman
       this.speed = speed.snowman
+      this.height = this.image.height
+      this.width = this.image.width
     }
 
     draw() {
       if (document.body.clientWidth > 2000) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width *1.8, this.image.height*1.8)
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
       }
       if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
         ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
       }
       if (document.body.clientWidth < 1000) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width * 0.5, this.image.height * 0.5)
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
       }
     }
 
@@ -196,34 +221,33 @@ function drawCanvas() {
       this.jumping = false
       this.jumpSpeed = 2
       this.heghestJump = false
+      this.height = this.image.height
+      this.width = this.image.width
     }
 
     draw() {
       if (document.body.clientWidth > 2000) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width * 1.8, this.image.height * 1.8)
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
       }
       if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
         ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
       }
       if (document.body.clientWidth < 1000) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width * 0.5, this.image.height * 0.5)
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
       }
     }
 
     jump() {
-      if (this.jumping && !this.heghestJump && this.y > width_config.fox_posY - 130) {
+      if (this.jumping && !this.heghestJump && this.y > width_config.fox_posY - width_config.jumpHeight) {
         this.y -= this.jumpSpeed
-        console.log('up')
       }
       else if (this.y < width_config.fox_posY) {
         this.heghestJump = true
         this.y += this.jumpSpeed
-        console.log('dovn')
       }
       else {
         this.heghestJump = false
         this.jumping = false
-        console.log('end')
       }
     }
 
@@ -267,47 +291,75 @@ function drawCanvas() {
 
   function collision() {
     if (foxLayer.x < snower.x &&
-       foxLayer.x + 40 > snower.x &&
-       foxLayer.y + 70 > snower.y && gameMove
+       foxLayer.x + foxLayer.width * width_config.adaptHeightSnowman/1.3 > snower.x &&
+       foxLayer.y + width_config.collisionHeight > snower.y && gameMove
       ) {
-      const promoCode = document.createElement('H2')
-      document.body.append(promoCode)
-      promoCode.classList.add('game_over')
-      promoCode.classList.add('modal')
-      promoCode.innerHTML = `GAME OVER <br> click for a new game`
+          const promoCode = document.createElement('H2')
+          document.body.append(promoCode)
+          promoCode.classList.add('game_over')
+          promoCode.classList.add('modal')
+          promoCode.innerHTML = `GAME OVER <br> click for a new game`
 
-      countValue = 0
-      fox.src = `fox/death_5.png`
-      snower.x = canvas.width
-      checkGameOver = $('.game_over')
-      cancelAnimationFrame(animate)
-      addEventListener('click', drawCanvas, { once: true } )
+          countValue = 0
+          fox.src = `fox/death_5.png`
+          snower.x = canvas.width
+          checkGameOver = $('.game_over')
 
+      // cancelAnimationFrame(animate)
+      // addEventListener('click', drawCanvas, { once: true } )
       return gameMove = false
     }
   }
+
+  // document.addEventListener('click', () => {
+  //   if (!startMoveBack) {
+  //     startMoveBack = true;
+  //   }
+  // })
+
+  // staticBack()
+
+  // function staticBack() {
+  //   ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
+  //   ctx.drawImage(moon, width_config.moonPosX, 0, moon.width * wh * 0.8, moon.height * wh * 0.8)
+
+  //   moveObj.forEach(item => {
+  //     item.draw()
+  //     item.update()
+  //   })
+  //   foxLayer.draw()
+  // }
 
   function animate() {
     if (gameMove) {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
-      ctx.drawImage(moon, width_config.moonPosX, 0, moon.width*wh*0.8, moon.height*wh *0.8)
+      ctx.drawImage(moon, width_config.moonPosX, 0, moon.width * wh * 0.8, moon.height * wh * 0.8)
+
 
       moveObj.forEach(item => {
         item.update()
         item.draw()
       })
 
-      snower.draw()
-      snower.update()
+      // document.addEventListener('click', () => {
+      //   if (!startMoveBack) {
+      //     snower.update()
+      //     snower.draw()
+      //     startMoveBack = true;
+      //   }
+      // })
+
       foxLayer.update()
+      foxLayer.draw()
+      snower.update()
+      snower.draw()
     }
 
     collision()
     requestAnimationFrame(animate)
   }
-
 
   animate()
 }
@@ -317,14 +369,16 @@ function rand(min, max) {
 }
 
 // Promo code
-const countInt = setInterval(() => {
-  if (gameMove) {
-    countValue++
-    count.innerHTML = countValue
-    promoСode()
-  }
-  else countValue = 0
-}, 100)
+function countInt() {
+  setInterval(() => {
+    if (gameMove) {
+      countValue++
+      count.innerHTML = countValue
+      promoСode()
+    }
+    else countValue = 0
+  }, 100)
+}
 
 let checkPromo = false
 
@@ -363,7 +417,7 @@ window.addEventListener('resize', () => {
 let currentAnimation = null
 let fox_config = {
   jump: false,
-  timeJump: 2000,
+  timeJump: 1500,
 }
 
 if (gameMove) sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
@@ -396,7 +450,7 @@ function switchAnimation() {
       switchAnimation()
     }, fox_config.timeJump)
   } else {
-    sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
+    sprintsForMove(5, 70, '.fox', 'fox/run_', '.png')
   }
 }
 
