@@ -17,6 +17,7 @@ const back_mountains = $('.back_mountains')
 const many_trees = $('.many_trees')
 const sky = $('.sky')
 const moon = $('.moon')
+const fox_death = $('.fox_death')
 
 const snowman = $('.snowman')
 const snowmans = []
@@ -24,6 +25,13 @@ const snowmans = []
 let gameMove = true
 let startGame = false
 let startMoveBack = false
+let isJumping = false
+let isJumpingAmimation = false
+let moveBackDeath = false
+let dafthAnimation = false
+let stopAnimationFox = false
+let spaceStop = true
+let stopAnimationFoxDeath = false
 
 const fox = $('.fox')
 
@@ -51,7 +59,9 @@ if (document.body.clientWidth < 2000 && document.body.clientWidth > 1000) {
     jumpHeight          : 130,
     adaptHeightSnowman  : 1,
     collisionHeight     : 50,
-
+    fox_height          : 71,
+    fox_width           : 170,
+    speedJumpPX         : 2.3,
   }
   speed = {
     groundLayer   : 3,
@@ -78,7 +88,9 @@ if (document.body.clientWidth < 1000) {
     jumpHeight          : 80,
     adaptHeightSnowman  : 0.5,
     collisionHeight     : 30,
-
+    fox_height          : 71 * 0.5,
+    fox_width           : 170 * 0.5,
+    speedJumpPX         : 1.5,
   }
   speed = {
     groundLayer   : 2,
@@ -109,9 +121,12 @@ if (document.body.clientWidth > 2000) {
     fox_posY            : groundPosY - fox.height,
     fox_posX            : canvas.width / 14,
     snowman_posY        : groundPosY - fox.height,
-    jumpHeight          : 160,
+    jumpHeight          : 180,
     adaptHeightSnowman  : 1.8,
     collisionHeight     : 80,
+    fox_height          : 71 * 1.8,
+    fox_width           : 170 * 1.8,
+    speedJumpPX         : 4,
   }
   speed = {
     groundLayer   : 10,
@@ -129,221 +144,234 @@ const death_config = {
 
 function start_Game() {
   if (!startGame) {
-    jumpFox()
     countInt()
+    startMoveBack = true;
     startGame = true;
+    checkVariableTextToStart()
   }
 }
 
 document.addEventListener('click', start_Game)
 
 updateSizeDoc()
-drawCanvas()
+jumpFox()
+createTextToStart()
 
 
-console.log(startGame);
+
 function updateSizeDoc() {
   canvas.width = document.body.clientWidth
   canvas.height = document.body.clientHeight
 }
 
-function drawCanvas() {
 
-  class Layer{
-    constructor (image, movSpeed, posY, img_width, height) {
-      this.x = 0
-      this.y = posY || 0
-      this.width = width_config.widthImages
-      this.height = 1
-      this.x2 = this.width
-      this.image = image
-      this.speed = movSpeed
-      this.height = height
+class Layer{
+  constructor (image, movSpeed, posY, img_width, height) {
+    this.x = 0
+    this.y = posY || 0
+    this.width = width_config.widthImages
+    this.height = 1
+    this.x2 = this.width
+    this.image = image
+    this.speed = movSpeed
+    this.height = height
+  }
+
+  draw() {
+    if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
+      ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height),
+      ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height)
     }
-
-    draw() {
-      if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
-        ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height),
-        ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height)
-      }
-      if (document.body.clientWidth > 2000) {
-        ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height * canvas.width / canvas.height * 1.5),
-        ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height * canvas.width / canvas.height * 1.5)
-      }
-      if (document.body.clientWidth < 1000) {
-        ctx.drawImage(this.image, this.x, this.y)
-        ctx.drawImage(this.image, this.x2, this.y)
-      }
+    if (document.body.clientWidth > 2000) {
+      ctx.drawImage(this.image, this.x, this.y, canvas.width, this.image.height * canvas.width / canvas.height * 1.5),
+      ctx.drawImage(this.image, this.x2, this.y, canvas.width, this.image.height * canvas.width / canvas.height * 1.5)
     }
-
-    update() {
-      if (this.x < -this.width) this.x = this.width - this.speed * 2.5
-      else this.x -= this.speed
-
-      if (this.x2 < -this.width) this.x2 = this.width - this.speed * 2.5
-      else this.x2 -= this.speed
+    if (document.body.clientWidth < 1000) {
+      ctx.drawImage(this.image, this.x, this.y)
+      ctx.drawImage(this.image, this.x2, this.y)
     }
   }
 
-  class Snowman{
-    constructor () {
-      this.x = canvas.width
-      this.y = width_config.snowman_posY
-      this.image = snowman
-      this.speed = speed.snowman
-      this.height = this.image.height
-      this.width = this.image.width
-    }
+  update() {
+    if (this.x < -this.width) this.x = this.width - this.speed * 2.5
+    else this.x -= this.speed
+    if (this.x2 < -this.width) this.x2 = this.width - this.speed * 2.5
+    else this.x2 -= this.speed
+  }
+}
+class Snowman{
+  constructor () {
+    this.x = canvas.width
+    this.y = width_config.snowman_posY
+    this.image = snowman
+    this.speed = speed.snowman
+    this.height = this.image.height
+    this.width = this.image.width
+  }
 
-    draw() {
-      if (document.body.clientWidth > 2000) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
-      }
-      if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
-      }
-      if (document.body.clientWidth < 1000) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
-      }
+  draw() {
+    if (document.body.clientWidth > 2000) {
+      ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
     }
-
-    update() {
-      this.x -= this.speed
-      if (this.x < 0 - 20) this.x = canvas.width
+    if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
+      ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
+    }
+    if (document.body.clientWidth < 1000) {
+      ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
     }
   }
 
-  class Fox{
-    constructor () {
-      this.x = width_config.fox_posX
-      this.y = width_config.fox_posY
-      this.image = fox
-      this.jumping = false
-      this.jumpSpeed = 2
+  update() {
+    this.x -= this.speed
+    if (this.x < 0 - 20) this.x = canvas.width
+  }
+}
+class Fox{
+  constructor () {
+    this.x = width_config.fox_posX
+    this.y = width_config.fox_posY
+    this.image = fox
+    this.jumping = false
+    this.jumpSpeed = width_config.speedJumpPX
+    this.heghestJump = false
+    this.height = width_config.fox_height
+    this.width = this.image.width
+  }
+
+  draw() {
+    if(!stopAnimationFoxDeath){
+      if (document.body.clientWidth > 2000) {
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.height)
+      }
+      if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
+        ctx.drawImage(this.image, this.x, this.y, this.image.width, this.height)
+      }
+      if (document.body.clientWidth < 1000) {
+        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.height)
+      }
+    }
+  }
+
+  jump() {
+    if (this.jumping && !this.heghestJump && this.y > width_config.fox_posY - width_config.jumpHeight) {
+      this.y -= this.jumpSpeed
+    }
+    else if (this.y < width_config.fox_posY) {
+      this.heghestJump = true
+      this.y += this.jumpSpeed
+    }
+    else {
       this.heghestJump = false
-      this.height = this.image.height
-      this.width = this.image.width
-    }
-
-    draw() {
-      if (document.body.clientWidth > 2000) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
-      }
-      if (document.body.clientWidth > 1000 && document.body.clientWidth < 2001) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width, this.image.height)
-      }
-      if (document.body.clientWidth < 1000) {
-        ctx.drawImage(this.image, this.x, this.y, this.image.width * width_config.adaptHeightSnowman, this.image.height * width_config.adaptHeightSnowman)
-      }
-    }
-
-    jump() {
-      if (this.jumping && !this.heghestJump && this.y > width_config.fox_posY - width_config.jumpHeight) {
-        this.y -= this.jumpSpeed
-      }
-      else if (this.y < width_config.fox_posY) {
-        this.heghestJump = true
-        this.y += this.jumpSpeed
-      }
-      else {
-        this.heghestJump = false
-        this.jumping = false
-      }
-    }
-
-    update() {
-      this.draw()
-      this.jump()
+      this.jumping = false
     }
   }
+  update() {
+    this.draw()
+    this.jump()
+  }
+}
 
-  const groundLayer = new Layer(ground, speed.groundLayer, width_config.groundPosY)
-  const treeLayer = new Layer(tree, speed.treeLayer, width_config.treePosY)
-  const manyTreeLayer = new Layer(many_trees, speed.manyTreeLayer, width_config.many_treesPosY)
-  const mountLayer = new Layer(mountains, speed.mountLayer, width_config.mountainsPosY)
-  const backMountLayer = new Layer(back_mountains, speed.backMountLayer, width_config.back_mountainsPosY)
+const groundLayer = new Layer(ground, speed.groundLayer, width_config.groundPosY)
+const treeLayer = new Layer(tree, speed.treeLayer, width_config.treePosY)
+const manyTreeLayer = new Layer(many_trees, speed.manyTreeLayer, width_config.many_treesPosY)
+const mountLayer = new Layer(mountains, speed.mountLayer, width_config.mountainsPosY)
+const backMountLayer = new Layer(back_mountains, speed.backMountLayer, width_config.back_mountainsPosY)
+const moveObj = [backMountLayer, mountLayer, manyTreeLayer, groundLayer, treeLayer]
+const foxLayer = new Fox()
+const snower = new Snowman(2, 300)
 
-  const moveObj = [backMountLayer, mountLayer, manyTreeLayer, groundLayer, treeLayer]
 
-  const foxLayer = new Fox()
-  const snower = new Snowman(2, 300)
-
-  document.addEventListener('click', () => {
+document.addEventListener('click', () => {
+  if(isJumping){
     if (!foxLayer.jumping && gameMove) {
       foxLayer.jumping = true
     }
-  })
-
-  document.addEventListener('keydown', (event) => {
-    if (event.keyCode == 32 || event.keyCode == 38) {
-      if (!foxLayer.jumping) {
-        foxLayer.jumping = true
-      }
-    }
-  })
-
-  // let checkGameOver = document
-  document.addEventListener('click', () => {
-    if (!gameMove && document.querySelector('.game_over')) {
-      location.reload()
-    }
-  })
-
-  function collision() {
-    if (foxLayer.x < snower.x &&
-       foxLayer.x + foxLayer.width * width_config.adaptHeightSnowman/1.3 > snower.x &&
-       foxLayer.y + width_config.collisionHeight > snower.y && gameMove
-      ) {
-          const promoCode = document.createElement('H2')
-          document.body.append(promoCode)
-          promoCode.classList.add('game_over')
-          promoCode.classList.add('modal')
-          promoCode.innerHTML = `GAME OVER <br> click for a new game`
-
-          countValue = 0
-          fox.src = `fox/death_5.png`
-          snower.x = canvas.width
-          checkGameOver = $('.game_over')
-
-      // cancelAnimationFrame(animate)
-      // addEventListener('click', drawCanvas, { once: true } )
-      return gameMove = false
-    }
+  }
+  if(!isJumping){
+    isJumping = true
   }
 
-  function animate() {
-    if (gameMove) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+})
 
-      ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
-      ctx.drawImage(moon, width_config.moonPosX, 0, moon.width * wh * 0.8, moon.height * wh * 0.8)
+document.addEventListener('keydown', (event) => {
+  if (event.keyCode == 32 || event.keyCode == 38) {
+    if (!foxLayer.jumping) {
+      foxLayer.jumping = true
+    }
+  }
+})
+// let checkGameOver = document
+document.addEventListener('click', () => {
+  if (!gameMove && document.querySelector('.game_over')) {
+    location.reload()
+  }
+})
+console.log(foxLayer.height, foxLayer.width);
+function collision() {
+  if (foxLayer.x < snower.x &&
+     foxLayer.x + foxLayer.width * width_config.adaptHeightSnowman/1.3 > snower.x &&
+     foxLayer.y + width_config.collisionHeight > snower.y && gameMove
+    ) {
+        const promoCode = document.createElement('H2')
+        document.body.append(promoCode)
+        promoCode.classList.add('game_over')
+        promoCode.classList.add('modal')
+        promoCode.innerHTML = `GAME OVER <br> click for a new game`
+        countValue = 0
+        fox.src = `fox/death_5.png`
+        snower.x = canvas.width
+        checkGameOver = $('.game_over')
+        dafthAnimation = true
+        if (currentAnimation) {
+          cancelAnimationFrame(currentAnimation)
+          currentAnimation = null
+        }
+        if(dafthAnimation){
+          sprintsForMove(6, 100, '.fox', 'fox/death_', '.png')
+          setTimeout(() => {
+            // stopAnimationFox = true
+            stopAnimationFoxDeath = true
+          }, 500)
+        }
+    return gameMove = false
+  }
+}
+function animate() {
 
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
+  ctx.drawImage(moon, width_config.moonPosX, 0, moon.width * wh * 0.8, moon.height * wh * 0.8)
 
-      moveObj.forEach(item => {
-        item.update()
-        item.draw()
-      })
+  backMountLayer.draw()
+  mountLayer.draw()
+  manyTreeLayer.draw()
+  treeLayer.draw()
 
-      // document.addEventListener('click', () => {
-      //   if (!startMoveBack) {
-      //     snower.update()
-      //     snower.draw()
-      //     startMoveBack = true;
-      //   }
-      // })
+  groundLayer.draw()
+ if(stopAnimationFoxDeath){
+  ctx.drawImage(fox_death, width_config.fox_posX, width_config.fox_posY, width_config.fox_width ,width_config.fox_height)
+ }
+  if (gameMove) {
+    moveObj.forEach(item => {
+      item.update()
+      item.draw()
+    })
 
-      foxLayer.update()
-      foxLayer.draw()
+    if (startMoveBack) {
       snower.update()
       snower.draw()
     }
-
-    collision()
-    requestAnimationFrame(animate)
   }
+  if(!stopAnimationFox){
+    foxLayer.draw()
+  }
+  foxLayer.jump()
 
-  animate()
+  collision()
+  requestAnimationFrame(animate)
 }
+animate()
+
 
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -366,7 +394,6 @@ let checkPromo = false
 function promoСode() {
   if (countValue > count_for_win && countValue < count_for_win + 2) {
     createPromoCode()
-    console.log('ehf')
     checkPromo = true
     setTimeout(() => {
       if (checkPromo == true) {
@@ -389,9 +416,22 @@ function createPromoCode() {
   promoCode.innerHTML = promo_code
 }
 
+function checkVariableTextToStart() {
+  const promoCode = $('.modal')
+  document.body.removeChild(promoCode)
+}
+
+function createTextToStart() {
+  const TextToStart = document.createElement('h2')
+  document.body.append(TextToStart)
+  TextToStart.classList.add('modal')
+  TextToStart.innerHTML = 'click to start'
+}
+
+
 window.addEventListener('resize', () => {
   updateSizeDoc()
-  drawCanvas()
+  // drawCanvas()
 })
 
 // Animation fox
@@ -400,38 +440,62 @@ let fox_config = {
   jump: false,
   timeJump: 2000,
 }
-
-if (gameMove) sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
-if (!gameMove) sprintsForMove(6, 100, '.fox', 'fox/death_', '.png')
+function srartRun() {
+  if (gameMove) sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
+  if (!gameMove) sprintsForMove(6, 100, '.fox', 'fox/death_', '.png')
+}
+srartRun()
 
 function jumpFox() {
   window.addEventListener('keydown', (event) => {
-    if (event.keyCode == 32 || event.keyCode == 38) {
+
+    if (event.keyCode == 32 && spaceStop || event.keyCode == 38 && spaceStop) {
+      spaceStop = false
       fox_config.jump = true
       switchAnimation()
+      setTimeout(() => {
+        spaceStop = true
+      }, fox_config.timeJump - 10)
     }
+
   })
 
   window.addEventListener('click', () => {
+    if(isJumpingAmimation && spaceStop){
+      spaceStop = false
       fox_config.jump = true
       switchAnimation()
+      setTimeout(() => {
+        spaceStop = true
+      }, fox_config.timeJump - 10)
+    }
+    if(!isJumpingAmimation){
+      isJumpingAmimation = true
+    }
   })
 }
 
 function switchAnimation() {
-  if (currentAnimation && gameMove) {
-    cancelAnimationFrame(currentAnimation)
-    currentAnimation = null
+  if (!dafthAnimation){
+    console.log('работает!');
+    if (currentAnimation) {
+      cancelAnimationFrame(currentAnimation)
+      currentAnimation = null
+    }
+    if (fox_config.jump && gameMove) {
+      sprintsForMove(6, 350, '.fox', 'fox/jump_', '.png')
+      setTimeout(() => {
+        fox_config.jump = false
+        switchAnimation()
+      }, fox_config.timeJump)
+    }
+    else if(!fox_config.jump && !dafthAnimation|| !currentAnimation && !dafthAnimation) {
+      sprintsForMove(5, 100, '.fox', 'fox/run_', '.png')
+    }
   }
-
-  if (fox_config.jump && gameMove) {
-    sprintsForMove(6, 350, '.fox', 'fox/jump_', '.png')
-    setTimeout(() => {
-      fox_config.jump = false
-      switchAnimation()
-    }, fox_config.timeJump)
-  } else {
-    sprintsForMove(5, 70, '.fox', 'fox/run_', '.png')
+  if (dafthAnimation){
+    console.log('работает смерть!')
+    sprintsForMove(6, 100, '.fox', 'fox/death_', '.png')
   }
 }
 
