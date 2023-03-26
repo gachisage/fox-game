@@ -2,10 +2,16 @@
   .modal, body{
     font-size: 28px;
   }
+  button{
+    font-size: 20px;
+  }
 }
 @media (max-width: 2000px){
   .modal{
     font-size: 20px;
+  }
+  button{
+    font-size: 14px;
   }
 }
 @media (max-width: 1000px){
@@ -21,5 +27,12 @@
   .modal{
     font-size: 14px;
     height: 15%;
+  }
+  #buttons{
+    height: 7%;
+    top: 60%;
+  }
+  button{
+    font-size: 12px;
   }
 }

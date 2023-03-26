@@ -28,6 +28,29 @@ img {
   top: 40%;
   line-height: 1.5;
 }
+#buttons{
+  display: none;
+  justify-content: space-between;
+  width: 70%;
+  height: 10%;
+  top: 65%;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 10;
+}
+button{
+  background-color: #f3f1dec7;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #033082;
+  border: none;
+  font-family: 'Press Start 2P', cursive;
+  cursor: pointer;
+  width: 48%;
+  font-size: 14px;
+}
 #count{
  position: absolute;
  z-index: 3;

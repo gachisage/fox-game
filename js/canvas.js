@@ -32,6 +32,7 @@ let dafthAnimation = false
 let stopAnimationFox = false
 let spaceStop = true
 let stopAnimationFoxDeath = false
+let checkPromo = false
 
 const fox = $('.fox')
 
@@ -303,10 +304,14 @@ document.addEventListener('keydown', (event) => {
 // let checkGameOver = document
 document.addEventListener('click', () => {
   if (!gameMove && document.querySelector('.game_over')) {
-    location.reload()
+    reload()
   }
 })
-console.log(foxLayer.height, foxLayer.width);
+
+function reload(){
+  location.reload()
+}
+
 function collision() {
   if (foxLayer.x < snower.x &&
      foxLayer.x + foxLayer.width * width_config.adaptHeightSnowman/1.3 > snower.x &&
@@ -337,38 +342,40 @@ function collision() {
   }
 }
 function animate() {
+  if(!checkPromo){
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
+    ctx.drawImage(moon, width_config.moonPosX, 0, moon.width * wh * 0.8, moon.height * wh * 0.8)
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  ctx.drawImage(sky, 0, 0, canvas.width, canvas.height)
-  ctx.drawImage(moon, width_config.moonPosX, 0, moon.width * wh * 0.8, moon.height * wh * 0.8)
+    backMountLayer.draw()
+    mountLayer.draw()
+    manyTreeLayer.draw()
+    treeLayer.draw()
 
-  backMountLayer.draw()
-  mountLayer.draw()
-  manyTreeLayer.draw()
-  treeLayer.draw()
+    groundLayer.draw()
+   if(stopAnimationFoxDeath){
+    ctx.drawImage(fox_death, width_config.fox_posX, width_config.fox_posY, width_config.fox_width ,width_config.fox_height)
+   }
+    if (gameMove) {
+      moveObj.forEach(item => {
+        item.update()
+        item.draw()
+      })
 
-  groundLayer.draw()
- if(stopAnimationFoxDeath){
-  ctx.drawImage(fox_death, width_config.fox_posX, width_config.fox_posY, width_config.fox_width ,width_config.fox_height)
- }
-  if (gameMove) {
-    moveObj.forEach(item => {
-      item.update()
-      item.draw()
-    })
-
-    if (startMoveBack) {
-      snower.update()
-      snower.draw()
+      if (startMoveBack) {
+        snower.update()
+        snower.draw()
+      }
     }
-  }
-  if(!stopAnimationFox){
-    foxLayer.draw()
-  }
-  foxLayer.jump()
+    if(!stopAnimationFox){
+      foxLayer.draw()
+    }
+    foxLayer.jump()
 
-  collision()
-  requestAnimationFrame(animate)
+    collision()
+    requestAnimationFrame(animate)
+  }
+
 }
 animate()
 
@@ -380,7 +387,7 @@ function rand(min, max) {
 // Promo code
 function countInt() {
   setInterval(() => {
-    if (gameMove) {
+    if (gameMove && !checkPromo) {
       countValue++
       count.innerHTML = countValue
       promoСode()
@@ -389,17 +396,13 @@ function countInt() {
   }, 100)
 }
 
-let checkPromo = false
+
 
 function promoСode() {
   if (countValue > count_for_win && countValue < count_for_win + 2) {
     createPromoCode()
     checkPromo = true
-    setTimeout(() => {
-      if (checkPromo == true) {
-        checkVariablePromo()
-      }
-    }, 4000)
+    $('#buttons').style.display = 'flex'
   }
 }
 
@@ -483,7 +486,7 @@ function switchAnimation() {
       currentAnimation = null
     }
     if (fox_config.jump && gameMove) {
-      sprintsForMove(6, 350, '.fox', 'fox/jump_', '.png')
+      sprintsForMove(9, 200, '.fox', 'fox/jump_', '.png')
       setTimeout(() => {
         fox_config.jump = false
         switchAnimation()
@@ -516,4 +519,15 @@ function sprintsForMove(count, int, selector, path1, path2) {
     currentAnimation = requestAnimationFrame(switchImage)
   }
   currentAnimation = requestAnimationFrame(switchImage)
+}
+
+//buttons copy and new Game
+const text = 'FG12x403df'
+const copyContent = async () => {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log('Content copied to clipboard');
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+  }
 }
