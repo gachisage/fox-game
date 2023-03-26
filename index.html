@@ -11,36 +11,63 @@
 </head>
 <body>
   <div id="back_color"></div>
-  <div id="count" value="123"></div>
-
-  <div id="buttons">
-    <button id="copy" onclick="copyContent()">copy</button>
-    <button id="new_game" onclick="reload()">new game</button>
-  </div>
-
-  <div id="background">
-  </div>
 
   <canvas id="canvas">
-    <img class="fox" src="fox/run_1.png">
-    <img class="moon" src="source/moon.png">
-    <img class="sky" src="source/sky.png">
-    <img class="ground" src="source/ground.png">
-    <img class="tree tree1" src="source/tree_new.png">
-    <img class="back_mountains" src="source/back_mountains.png">
-    <img class="mountains" src="source/mountains.png">
-    <img class="many_trees" src="source/many_trees.png">
-    <img class="snowman" src="source/snowman.png">
+    <img class="fox" src="./fox/run_1.png">
+    <img class="moon" src="./source/moon.png">
+    <img class="sky" src="./source/sky.png">
+    <img class="ground" src="./source/ground.png">
+    <img class="tree tree1" src="./source/tree_new.png">
+    <img class="back_mountains" src="./source/back_mountains.png">
+    <img class="mountains" src="./source/mountains.png">
+    <img class="many_trees" src="./source/many_trees.png">
+    <img class="snowman" src="./source/snowman.png">
 
-    <img class="ground_bid" src="source/ground_big.png">
-    <img class="tree_bid tree1" src="source/tree_new_big.png">
-    <img class="back_mountains_bid" src="source/back_mountains_big.png">
-    <img class="mountains_bid" src="source/mountains_big.png">
-    <img class="many_trees_bid" src="source/many_trees_big.png">
-    <img class="fox_death" src="fox/death_6.png">
+    <img class="ground_bid" src="./source/ground_big.png">
+    <img class="tree_bid tree1" src="./source/tree_new_big.png">
+    <img class="back_mountains_bid" src="./source/back_mountains_big.png">
+    <img class="mountains_bid" src="./source/mountains_big.png">
+    <img class="many_trees_bid" src="./source/many_trees_big.png">
+    <img class="fox_death" src="./fox/death_6.png">
   </canvas>
 
+  <div class="game">
+    <h3 id="count">0</h3>
+
+    <div class="modals">
+      <div class="modal start float" onclick="startGame()">
+        <div class="modal__content">
+          <div class="modal__header">
+            <h2 class="modal__title">Fox Run</h2>
+          </div>
+          <div class="modal__body">
+            <p class="modal__text">Press any key to start</p>
+          </div>
+        </div>
+      </div>
+      <div style="display: none;" class="modal game_over float">
+        <div class="modal__content">
+          <div class="modal__header">
+            <h2 class="modal__title">Game Over!</h2>
+          </div>
+          <div class="modal__body">
+            <p class="modal__text">Try again</p>
+          </div>
+        </div>
+      </div>
+      <div style="display: none;" class="modal promocode float">
+        <div class="modal__content">
+          <div class="modal__header">
+            <h2 class="modal__title">You win!</h2>
+          </div>
+          <div class="modal__body">
+            <p id="promocode" class="modal__text"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src ="js/canvas.js"></script>
-  <!-- <script src="js/index.js"></script> -->
 </body>
 </html>
